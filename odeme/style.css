@@ -1,0 +1,1210 @@
+/* =========================================================
+   GENEL AYARLAR
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: #f3f4f6;
+    color: #1f2937;
+
+    min-height: 100vh;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   ANA UYGULAMA
+   ========================================================= */
+
+#app {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.sayfa {
+    width: 100%;
+    max-width: 700px;
+
+    min-height: 100vh;
+
+    margin: 0 auto;
+    padding: 16px;
+
+    background: #f3f4f6;
+}
+
+.gizli {
+    display: none !important;
+}
+
+
+/* =========================================================
+   ANA SAYFA ÜST BAR
+   ========================================================= */
+
+.ust-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.uygulama-baslik {
+    font-size: 25px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+
+    color: #111827;
+}
+
+.ay-basligi {
+    margin-top: 4px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   İKON BUTONU
+   ========================================================= */
+
+.ikon-btn {
+    width: 44px;
+    height: 44px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    font-size: 21px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   AY SEÇİCİ
+   ========================================================= */
+
+.ay-secici {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+
+    padding: 7px;
+
+    background: #ffffff;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ay-btn {
+    width: 42px;
+    height: 38px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bugun-btn {
+    flex: 1;
+
+    height: 38px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #eef2ff;
+
+    color: #4338ca;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   KATEGORİ KARTI
+   ========================================================= */
+
+.kategori-karti {
+    margin-bottom: 16px;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.07);
+}
+
+.kategori-baslik {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 16px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.kategori-baslik-isim {
+    font-size: 18px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+.kategori-toplam {
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #4f46e5;
+}
+
+
+/* =========================================================
+   ÖDEME SATIRI
+   ========================================================= */
+
+.odeme-satiri {
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.odeme-satiri:last-child {
+    border-bottom: none;
+}
+
+.odeme-ust {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 9px;
+}
+
+.odeme-adi {
+    min-width: 0;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #374151;
+
+    word-break: break-word;
+}
+
+.odeme-turu {
+    margin-top: 3px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    color: #9ca3af;
+}
+
+.odeme-alanlari {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   PARA GİRİŞ ALANI
+   ========================================================= */
+
+.para-alani {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+}
+
+.para-input {
+    width: 100%;
+    min-width: 0;
+
+    height: 45px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 11px;
+
+    background: #fafafa;
+
+    color: #111827;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.para-input:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.12);
+
+    background: #ffffff;
+}
+
+.para-birim {
+    margin-left: -38px;
+
+    padding-right: 10px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   KÜÇÜK ALANLAR
+   ========================================================= */
+
+.kucuk-alan {
+    flex: 1;
+
+    min-width: 110px;
+}
+
+.kucuk-alan label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    color: #6b7280;
+}
+
+.kucuk-input {
+    width: 100%;
+
+    height: 40px;
+
+    padding: 0 10px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    background: #fafafa;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+.kucuk-input:focus {
+    border-color: #6366f1;
+}
+
+
+/* =========================================================
+   KALAN BORÇ GÖSTERGESİ
+   ========================================================= */
+
+.kalan-borc {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 8px;
+    padding: 8px 10px;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+.kalan-borc span:first-child {
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #6b7280;
+}
+
+.kalan-borc strong {
+    font-size: 13px;
+
+    color: #374151;
+}
+
+
+/* =========================================================
+   GENEL TOPLAM KARTI
+   ========================================================= */
+
+.genel-toplam-karti {
+    margin-top: 18px;
+    margin-bottom: 14px;
+
+    padding: 18px;
+
+    border-radius: 18px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.toplam-baslik {
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #d1d5db;
+}
+
+.genel-toplam {
+    margin-top: 5px;
+
+    font-size: 28px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+}
+
+
+/* =========================================================
+   KALAN BORÇLAR KARTI
+   ========================================================= */
+
+.borclar-karti {
+    margin-bottom: 16px;
+
+    padding: 16px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.07);
+}
+
+.borclar-baslik {
+    margin-bottom: 12px;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+.borc-satiri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 11px 0;
+
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.borc-satiri:last-child {
+    border-bottom: none;
+}
+
+.borc-adi {
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #4b5563;
+}
+
+.borc-miktari {
+    font-size: 14px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+.toplam-borc-satiri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 12px;
+    padding-top: 14px;
+
+    border-top: 2px solid #e5e7eb;
+}
+
+.toplam-borc-satiri span {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.toplam-borc-satiri strong {
+    font-size: 17px;
+    font-weight: 800;
+
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   BÜYÜK MENÜ BUTONU
+   ========================================================= */
+
+.buyuk-menu-btn {
+    width: 100%;
+
+    min-height: 52px;
+
+    margin-bottom: 20px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #374151;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.07);
+}
+
+
+/* =========================================================
+   SAYFA BAŞLIĞI
+   ========================================================= */
+
+.sayfa-basligi {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.sayfa-basligi h1 {
+    margin: 0;
+
+    font-size: 24px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+.sayfa-basligi p {
+    margin: 3px 0 0;
+
+    font-size: 12px;
+
+    color: #6b7280;
+}
+
+.geri-btn {
+    flex-shrink: 0;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    font-size: 27px;
+
+    color: #374151;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+
+/* =========================================================
+   AYAR KARTI
+   ========================================================= */
+
+.ayar-karti {
+    margin-bottom: 16px;
+
+    padding: 16px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.ayar-karti h2 {
+    margin: 0 0 6px;
+
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.ayar-karti p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    color: #6b7280;
+}
+
+.ayar-karti-baslik {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+/* =========================================================
+   EKLE BUTONU
+   ========================================================= */
+
+.ekle-btn {
+    flex-shrink: 0;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #4f46e5;
+
+    color: #ffffff;
+
+    font-size: 24px;
+    font-weight: 400;
+
+    box-shadow:
+        0 4px 10px rgba(79, 70, 229, 0.25);
+}
+
+
+/* =========================================================
+   AYARLARDA BAŞLIK SATIRI
+   ========================================================= */
+
+.baslik-ayarlari-satiri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.baslik-ayarlari-satiri:last-child {
+    border-bottom: none;
+}
+
+.baslik-bilgi {
+    min-width: 0;
+}
+
+.baslik-adi {
+    font-size: 15px;
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+.baslik-sablon-sayisi {
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    color: #9ca3af;
+}
+
+.satir-butonlari {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+}
+
+.kucuk-btn {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #f3f4f6;
+
+    font-size: 15px;
+}
+
+.kucuk-btn.sil {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   ŞABLON SATIRLARI
+   ========================================================= */
+
+.sablon-satiri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.sablon-satiri:last-child {
+    border-bottom: none;
+}
+
+.sablon-bilgi {
+    min-width: 0;
+}
+
+.sablon-adi {
+    font-size: 15px;
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+.sablon-turu {
+    margin-top: 4px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   FORM KARTI
+   ========================================================= */
+
+.form-karti {
+    padding: 18px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.form-karti label {
+    display: block;
+
+    margin: 0 0 7px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #374151;
+}
+
+.form-karti input,
+.form-karti select {
+    width: 100%;
+
+    height: 48px;
+
+    margin-bottom: 16px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 11px;
+
+    background: #fafafa;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+.form-karti input:focus,
+.form-karti select:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+
+/* =========================================================
+   BİLGİ KUTUSU
+   ========================================================= */
+
+.bilgi-kutusu {
+    margin-bottom: 12px;
+    padding: 12px;
+
+    border-radius: 11px;
+
+    background: #f8fafc;
+
+    border-left: 4px solid #6366f1;
+}
+
+.bilgi-kutusu strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 13px;
+}
+
+.bilgi-kutusu p {
+    margin: 0;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   KAYDET BUTONU
+   ========================================================= */
+
+.kaydet-btn {
+    width: 100%;
+
+    height: 50px;
+
+    margin-top: 8px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #4f46e5;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    box-shadow:
+        0 4px 10px rgba(79, 70, 229, 0.22);
+}
+
+
+/* =========================================================
+   JSON BUTONLARI
+   ========================================================= */
+
+.iki-buton {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 14px;
+}
+
+.veri-btn {
+    flex: 1;
+
+    min-height: 45px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TEHLİKELİ ALAN
+   ========================================================= */
+
+.tehlikeli-alan {
+    margin-bottom: 20px;
+    padding: 16px;
+
+    border-radius: 18px;
+
+    background: #fff7f7;
+
+    border: 1px solid #fecaca;
+}
+
+.tehlikeli-alan h2 {
+    margin: 0 0 7px;
+
+    font-size: 16px;
+
+    color: #991b1b;
+}
+
+.tehlikeli-alan p {
+    margin: 0 0 13px;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    color: #7f1d1d;
+}
+
+.sil-btn {
+    width: 100%;
+
+    height: 44px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #dc2626;
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   YIL SEÇİCİ
+   ========================================================= */
+
+.yil-secici {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+
+    padding: 8px;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.yil-secici button {
+    width: 40px;
+    height: 38px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #f3f4f6;
+
+    font-size: 22px;
+}
+
+.yil-secici strong {
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   YILLIK TOPLAM
+   ========================================================= */
+
+.yillik-toplam-karti {
+    margin-bottom: 16px;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.yillik-toplam-karti div {
+    font-size: 13px;
+
+    color: #d1d5db;
+}
+
+.yillik-toplam-karti strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 28px;
+}
+
+
+/* =========================================================
+   AYLIK ÖZET SATIRI
+   ========================================================= */
+
+.ozet-ay-satiri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.ozet-ay-satiri:last-child {
+    border-bottom: none;
+}
+
+.ozet-ay-adi {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ozet-ay-tutari {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   KATEGORİ ÖZET SATIRI
+   ========================================================= */
+
+.kategori-ozet-satiri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.kategori-ozet-satiri:last-child {
+    border-bottom: none;
+}
+
+.kategori-ozet-adi {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.kategori-ozet-tutari {
+    font-size: 14px;
+    font-weight: 800;
+
+    color: #4f46e5;
+}
+
+
+/* =========================================================
+   BOŞ DURUM
+   ========================================================= */
+
+.bos-mesaj {
+    padding: 25px 10px;
+
+    text-align: center;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   MOBİL TELEFON UYUMU
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .sayfa {
+        padding: 12px;
+    }
+
+    .uygulama-baslik {
+        font-size: 23px;
+    }
+
+    .kategori-baslik {
+        padding: 14px;
+    }
+
+    .odeme-satiri {
+        padding: 13px 14px;
+    }
+
+    .genel-toplam {
+        font-size: 26px;
+    }
+
+}
+
+
+/* =========================================================
+   ÇOK KÜÇÜK EKRANLAR
+   ========================================================= */
+
+@media (max-width: 350px) {
+
+    .sayfa {
+        padding: 9px;
+    }
+
+    .uygulama-baslik {
+        font-size: 21px;
+    }
+
+    .odeme-alanlari {
+        flex-direction: column;
+    }
+
+    .kucuk-alan {
+        width: 100%;
+    }
+
+    .iki-buton {
+        flex-direction: column;
+    }
+
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff; /* Koyu tema kullanıyorsanız uygun bir renk (örn: #1e293b) ile değiştirebilirsiniz */
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    margin-bottom: 20px;
+}
+
+.app-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b; /* Başlık rengi */
+    margin: 0;
+}
+
+.ayar-btn {
+    background-color: #f1f5f9;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #475569;
+    transition: background-color 0.2s;
+}
+
+.ayar-btn:hover {
+    background-color: #e2e8f0;
+}

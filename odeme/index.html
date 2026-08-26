@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="theme-color" content="#1f2937">
+
+    <title>Ödeme Takip</title>
+
+    <!-- Tasarım dosyası -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         UYGULAMA ANA KONTEYNERİ
+         ===================================================== -->
+
+    <div id="app">
+
+
+        <!-- =================================================
+             ANA SAYFA
+             ================================================= -->
+
+        <section id="anasayfa" class="sayfa">
+
+            <!-- ÜST BAŞLIK -->
+            <header class="ust-bar">
+
+                <div>
+                    <div class="uygulama-baslik">
+                        Ödeme Takip
+                    </div>
+
+                    <div id="ayBasligi" class="ay-basligi">
+                        Ağustos 2026
+                    </div>
+                </div>
+
+                <button
+                    id="ayarlarBtn"
+                    class="ikon-btn"
+                    onclick="ayarlarAc()"
+                    aria-label="Ayarlar"
+                >
+                    ⚙️
+                </button>
+
+            </header>
+
+
+            <!-- =================================================
+                 AY SEÇİMİ
+                 ================================================= -->
+
+            <div class="ay-secici">
+
+                <button
+                    id="oncekiAyBtn"
+                    class="ay-btn"
+                    onclick="oncekiAyaGit()"
+                >
+                    ‹
+                </button>
+
+                <button
+                    id="bugunAyBtn"
+                    class="bugun-btn"
+                    onclick="buAyaGit()"
+                >
+                    Bu Ay
+                </button>
+
+                <button
+                    id="sonrakiAyBtn"
+                    class="ay-btn"
+                    onclick="sonrakiAyaGit()"
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 ÖDEME KATEGORİLERİ
+                 JavaScript buraya ekleyecek
+                 ================================================= -->
+
+            <main id="odemeListesi">
+
+                <!-- Kategoriler JS tarafından oluşturulacak -->
+
+            </main>
+
+
+            <!-- =================================================
+                 GENEL TOPLAM
+                 ================================================= -->
+
+            <section class="genel-toplam-karti">
+
+                <div class="toplam-baslik">
+                    Bu Ay Toplam Ödeme
+                </div>
+
+                <div
+                    id="genelToplam"
+                    class="genel-toplam"
+                >
+                    0,00 ₺
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 KALAN BORÇLAR
+                 ================================================= -->
+
+            <section class="borclar-karti">
+
+                <div class="borclar-baslik">
+                    💳 Kalan Borçlar
+                </div>
+
+                <div id="kalanBorclarListesi">
+
+                    <!-- Borçlar JS tarafından oluşturulacak -->
+
+                </div>
+
+                <div class="toplam-borc-satiri">
+
+                    <span>
+                        Toplam Kalan Borç
+                    </span>
+
+                    <strong id="toplamKalanBorc">
+                        0,00 ₺
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 YILLIK ÖZET BUTONU
+                 ================================================= -->
+
+            <button
+                class="buyuk-menu-btn"
+                onclick="yillikOzetAc()"
+            >
+                📊 Yıllık Özet
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             AYARLAR SAYFASI
+             ===================================================== -->
+
+        <section
+            id="ayarlarSayfasi"
+            class="sayfa gizli"
+        >
+
+            <header class="sayfa-basligi">
+
+                <button
+                    class="geri-btn"
+                    onclick="geriGit()"
+                >
+                    ‹
+                </button>
+
+                <h1>
+                    Ayarlar
+                </h1>
+
+            </header>
+
+
+            <!-- =================================================
+                 BAŞLIKLAR
+                 ================================================= -->
+
+            <section class="ayar-karti">
+
+                <div class="ayar-karti-baslik">
+
+                    <div>
+                        <h2>Ödeme Başlıkları</h2>
+
+                        <p>
+                            Bankalar, Faturalar, Kredi Kartları
+                            gibi başlıklar oluşturabilirsiniz.
+                        </p>
+                    </div>
+                    
+                </div>
+
+
+                <div id="basliklarListesi">
+
+                    <!-- Başlıklar JS tarafından oluşturulacak -->
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 JSON YEDEKLEME
+                 ================================================= -->
+
+            <section class="ayar-karti">
+
+                <h2>
+                    💾 Veri Yönetimi
+                </h2>
+
+                <p>
+                    Uygulamadaki bütün verilerinizi
+                    JSON dosyası olarak yedekleyebilirsiniz.
+                </p>
+
+                <div class="iki-buton">
+
+                    <button
+                        class="veri-btn"
+                        onclick="jsonDisariAktar()"
+                    >
+                        📤 JSON Yedekle
+                    </button>
+
+                    <button
+                        class="veri-btn"
+                        onclick="jsonIceriAktarAc()"
+                    >
+                        📥 JSON Geri Yükle
+                    </button>
+
+                </div>
+
+                <input
+                    type="file"
+                    id="jsonFileInput"
+                    accept=".json,application/json"
+                    onchange="jsonIceriAktar(event)"
+                    hidden
+                >
+
+            </section>
+
+
+            <!-- =================================================
+                 VERİLERİ SIFIRLAMA
+                 ================================================= -->
+
+            <section class="tehlikeli-alan">
+
+                <h2>
+                    ⚠️ Tehlikeli Bölge
+                </h2>
+
+                <p>
+                    Bütün uygulama verilerini siler.
+                    Bu işlem geri alınamaz.
+                </p>
+
+                <button
+                    class="sil-btn"
+                    onclick="tumVerileriSil()"
+                >
+                    🗑️ Tüm Verileri Sil
+                </button>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ŞABLON YÖNETİMİ SAYFASI
+             ===================================================== -->
+
+        <section
+            id="sablonSayfasi"
+            class="sayfa gizli"
+        >
+
+            <header class="sayfa-basligi">
+
+                <button
+                    class="geri-btn"
+                    onclick="geriGit()"
+                >
+                    ‹
+                </button>
+
+                <div>
+
+                    <h1 id="sablonSayfasiBaslik">
+                        Şablonlar
+                    </h1>
+
+                    <p id="sablonSayfasiAciklama">
+                        Ödeme kalemlerini yönetin.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <section class="ayar-karti">
+
+                <div class="ayar-karti-baslik">
+
+                    <div>
+
+                        <h2>
+                            Ödeme Kalemleri
+                        </h2>
+
+                        <p>
+                            Ana ekranda görünecek ödeme
+                            kalemlerini oluşturun.
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="ekle-btn"
+                        onclick="sablonEkle()"
+                    >
+                        ＋
+                    </button>
+                    
+                </div>
+
+
+                <div id="sablonlarListesi">
+
+                    <!-- Şablonlar JS tarafından oluşturulacak -->
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ŞABLON DÜZENLEME SAYFASI
+             ===================================================== -->
+
+        <section
+            id="sablonDuzenleSayfasi"
+            class="sayfa gizli"
+        >
+
+            <header class="sayfa-basligi">
+
+                <button
+                    class="geri-btn"
+                    onclick="geriGit()"
+                >
+                    ‹
+                </button>
+
+                <h1>
+                    Şablon Düzenle
+                </h1>
+
+            </header>
+
+
+            <section class="form-karti">
+
+                <label>
+                    Şablon Adı
+                </label>
+
+                <input
+                    type="text"
+                    id="sablonAdiInput"
+                >
+
+
+                <label>
+                    Şablon Türü
+                </label>
+
+                <select id="sablonTuruInput">
+
+                    <option value="taksitli">
+                        Taksitli Borç
+                    </option>
+
+                    <option value="kredikarti">
+                        Kredi Kartı
+                    </option>
+
+                    <option value="normal">
+                        Normal Ödeme
+                    </option>
+
+                </select>
+
+
+                <div class="bilgi-kutusu">
+
+                    <strong>
+                        Taksitli Borç
+                    </strong>
+
+                    <p>
+                        Kalan borç, kalan taksit ×
+                        taksit tutarı şeklinde hesaplanır.
+                    </p>
+
+                </div>
+
+
+                <div class="bilgi-kutusu">
+
+                    <strong>
+                        Kredi Kartı
+                    </strong>
+
+                    <p>
+                        Kalan borç elle düzenlenebilir.
+                        Çünkü kredi kartlarında borç
+                        her ay değişebilir.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="kaydet-btn"
+                    onclick="sablonKaydet()"
+                >
+                    💾 Kaydet
+                </button>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             YILLIK ÖZET SAYFASI
+             ===================================================== -->
+
+        <section
+            id="yillikOzetSayfasi"
+            class="sayfa gizli"
+        >
+
+            <header class="sayfa-basligi">
+
+                <button
+                    class="geri-btn"
+                    onclick="geriGit()"
+                >
+                    ‹
+                </button>
+
+                <h1>
+                    Yıllık Özet
+                </h1>
+
+            </header>
+
+
+            <div class="yil-secici">
+
+                <button
+                    onclick="ozetYilAzalt()"
+                >
+                    ‹
+                </button>
+
+                <strong id="ozetYili">
+                    2026
+                </strong>
+
+                <button
+                    onclick="ozetYilArtir()"
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <section class="yillik-toplam-karti">
+
+                <div>
+                    Yıllık Toplam Ödeme
+                </div>
+
+                <strong id="yillikToplam">
+                    0,00 ₺
+                </strong>
+
+            </section>
+
+
+            <section class="ayar-karti">
+
+                <h2>
+                    Aylık Ödemeler
+                </h2>
+
+                <div id="aylikOzetListesi">
+
+                    <!-- JS tarafından oluşturulacak -->
+
+                </div>
+
+            </section>
+
+
+            <section class="ayar-karti">
+
+                <h2>
+                    Kategori Bazında
+                </h2>
+
+                <div id="kategoriOzetListesi">
+                
+
+                    <!-- JS tarafından oluşturulacak -->
+
+                </div>
+                <div class="kategori-karti" style="text-align: center; margin-top: 20px; padding: 15px; background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <h3 style="margin-bottom: 10px; font-size: 1.1rem; color: #1e293b;">Kategori Dağılım Grafiği</h3>
+    <canvas id="pastaCanvas" width="200" height="200" style="cursor: pointer;"></canvas>
+    <div id="grafikDetay" style="margin-top: 10px; font-size: 0.95rem; font-weight: 600; color: #475569; min-height: 24px;">
+        Grafikteki bir dilime tıklayarak detayı görebilirsiniz.
+    </div>
+</div>
+
+
+            </section>
+
+        </section>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT DOSYASI
+         ===================================================== -->
+
+    <script src="app.js"></script>
+
+</body>
+</html>
