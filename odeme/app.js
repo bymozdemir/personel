@@ -338,35 +338,9 @@ function odemeTutariGetir(sablonId) {
    ========================================================= */
 
 function taksitliGosterilmeliMi(sablonId, hedefTarih = aktifTarih) {
-    const ayAnahtarStr = ayAnahtari(hedefTarih);
-    const ayVerisi = veriler.aylar[ayAnahtarStr];
-
-    if (ayVerisi && ayVerisi.odemeler && ayVerisi.odemeler[sablonId] && ayVerisi.odemeler[sablonId].kalanTaksit !== undefined && ayVerisi.odemeler[sablonId].kalanTaksit !== "" && ayVerisi.odemeler[sablonId].kalanTaksit !== null) {
-        return true;
-    }
-
-    let hicGecmisYok = true;
-    for (const anahtar in veriler.aylar) {
-        const ayD = veriler.aylar[anahtar];
-        if (ayD && ayD.odemeler && ayD.odemeler[sablonId] && ayD.odemeler[sablonId].kalanTaksit !== undefined && ayD.odemeler[sablonId].kalanTaksit !== "" && ayD.odemeler[sablonId].kalanTaksit !== null) {
-            hicGecmisYok = false;
-            break;
-        }
-    }
-    if (hicGecmisYok) return true;
-
-    let tarihObj = new Date(hedefTarih.getFullYear(), hedefTarih.getMonth(), 1);
-    for (let i = 1; i <= 120; i++) {
-        tarihObj.setMonth(tarihObj.getMonth() - 1);
-        const prevAnahtarStr = ayAnahtari(tarihObj);
-        const prevAyVerisi = veriler.aylar[prevAnahtarStr];
-
-        if (prevAyVerisi && prevAyVerisi.odemeler && prevAyVerisi.odemeler[sablonId] && prevAyVerisi.odemeler[sablonId].kalanTaksit !== undefined && prevAyVerisi.odemeler[sablonId].kalanTaksit !== "" && prevAyVerisi.odemeler[sablonId].kalanTaksit !== null) {
-            const baseVal = parseSayi(prevAyVerisi.odemeler[sablonId].kalanTaksit);
-            return i <= baseVal;
-        }
-    }
-    return false;
+    const sonuc = giderSablonBilgisiniBul(sablonId);
+    if (!sonuc) return true;
+    return taksitAktifMi(sonuc.sablon, hedefTarih);
 }
 
 function etkinKalanTaksitGetir(sablonId, tarih = aktifTarih) {
@@ -379,20 +353,16 @@ function etkinKalanTaksitGetir(sablonId, tarih = aktifTarih) {
     }
 
     let tarihObj = new Date(hedefZaman.getFullYear(), hedefZaman.getMonth(), 1);
-    let gecenAySayisi = 0;
-
     for (let i = 1; i <= 120; i++) {
         tarihObj.setMonth(tarihObj.getMonth() - 1);
-        gecenAySayisi++;
         const prevAnahtarStr = ayAnahtari(tarihObj);
         const prevAyVerisi = veriler.aylar[prevAnahtarStr];
 
         if (prevAyVerisi && prevAyVerisi.odemeler && prevAyVerisi.odemeler[sablonId] && prevAyVerisi.odemeler[sablonId].kalanTaksit !== undefined && prevAyVerisi.odemeler[sablonId].kalanTaksit !== "" && prevAyVerisi.odemeler[sablonId].kalanTaksit !== null) {
-            const baseVal = parseSayi(prevAyVerisi.odemeler[sablonId].kalanTaksit);
-            const hesaplananTaksit = baseVal - gecenAySayisi;
-            return hesaplananTaksit >= 0 ? hesaplananTaksit : 0;
+            return parseSayi(prevAyVerisi.odemeler[sablonId].kalanTaksit);
         }
     }
+
     return 0;
 }
 
@@ -551,25 +521,33 @@ function odemeSatiriOlustur(sablon) {
                 <span class="birim">₺</span>
             </div>`;
     } else if (sablon.tur === "taksitli") {
-        let gosterilecekTaksit = odeme.kalanTaksit;
-        if (gosterilecekTaksit === undefined || gosterilecekTaksit === "" || gosterilecekTaksit === null) {
-            let hasHistory = false;
-            for (const anahtar in veriler.aylar) {
-                const ayVerisi = veriler.aylar[anahtar];
-                if (ayVerisi && ayVerisi.odemeler && ayVerisi.odemeler[sablon.id] && ayVerisi.odemeler[sablon.id].kalanTaksit !== undefined && ayVerisi.odemeler[sablon.id].kalanTaksit !== "" && ayVerisi.odemeler[sablon.id].kalanTaksit !== null) {
-                    hasHistory = true;
-                    break;
-                }
+        let yapilanOdemeSayisi = 0;
+        for (const anahtar in veriler.aylar) {
+            const aVeri = veriler.aylar[anahtar];
+            if (aVeri?.odemeler?.[sablon.id]?.odeme > 0) {
+                yapilanOdemeSayisi++;
             }
-            gosterilecekTaksit = hasHistory ? etkinKalanTaksitGetir(sablon.id) : "";
         }
+        
+        let kalanTaksitGosterge = (sablon.toplamTaksitSayisi || 0) - yapilanOdemeSayisi;
+        if (kalanTaksitGosterge < 0) kalanTaksitGosterge = 0;
+
+        let kalanNetBorc = kalanBorcHesapla(sablon);
+        
+        let etiketBilgi = `Kalan Taksit: <input type="text" id="taksit-input-${sablon.id}" value="${kalanTaksitGosterge}" style="width:40px; text-align:center; border:none; background:transparent; font-weight:bold;" readonly>`;
+        if (kalanTaksitGosterge === 0 && kalanNetBorc > 0) {
+            etiketBilgi = `<span style="color:var(--gider); font-weight:bold;">Taksit bitti ama ${paraFormatla(kalanNetBorc)} borç var!</span>`;
+        } else if (kalanNetBorc <= 0) {
+            etiketBilgi = `<span style="color:green; font-weight:bold;">Borç Bitti 🎉</span>`;
+        }
+
         alanlar = `
             <div class="para-kutu">
-                <input type="text" inputmode="decimal" value="${val(odeme.odeme)}" oninput="odemeGuncelle('${sablon.id}', 'odeme', this.value)" placeholder="Taksit Tutarı">
+                <input type="text" inputmode="decimal" value="${val(odeme.odeme)}" oninput="odemeGuncelle('${sablon.id}', 'odeme', this.value)" placeholder="Örn: ${sablon.taksitTutari || 0} ₺">
                 <span class="birim">₺</span>
             </div>
-            <div class="para-kutu taksit-kutu">
-                <input type="text" inputmode="decimal" value="${val(gosterilecekTaksit)}" oninput="odemeGuncelle('${sablon.id}', 'kalanTaksit', this.value)" placeholder="Kalan Taksit">
+            <div class="para-kutu taksit-kutu" style="display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.03); padding: 0 10px; border-radius: 8px; font-size: 13px;">
+                <span>${etiketBilgi}</span>
             </div>`;
     } else if (sablon.tur === "kredikarti") {
         alanlar = `
@@ -592,10 +570,56 @@ function odemeSatiriOlustur(sablon) {
     return satir;
 }
 
+function taksitAktifMi(sablon, tarih = aktifTarih) {
+    if (sablon.tur !== "taksitli") return true;
+    if (!sablon.baslangicAy || !sablon.toplamTaksitSayisi) return true;
+
+    const [yil, ay] = sablon.baslangicAy.split("-").map(Number);
+    const baslangicZaman = new Date(yil, ay - 1, 1);
+    const hedefZaman = new Date(tarih.getFullYear(), tarih.getMonth(), 1);
+
+    const ayFarki = (hedefZaman.getFullYear() - baslangicZaman.getFullYear()) * 12 + (hedefZaman.getMonth() - baslangicZaman.getMonth());
+
+    if (ayFarki < 0) return false;
+
+    if (ayFarki >= sablon.toplamTaksitSayisi) {
+        let kalanNetBorc = kalanBorcHesapla(sablon);
+        if (kalanNetBorc <= 0) return false;
+    }
+
+    return true;
+}
+
 function odemeGuncelle(sablonId, alan, deger) {
     const ay = aktifAyVerisi();
     if (!ay.odemeler[sablonId]) ay.odemeler[sablonId] = {};
+
     ay.odemeler[sablonId][alan] = deger;
+
+    if (alan === 'odeme') {
+        let sablon = giderSablonBilgisiniBul(sablonId);
+        if (sablon && sablon.sablon && sablon.sablon.tur === "taksitli") {
+            let yapilanOdemeSayisi = 0;
+            for (const anahtar in veriler.aylar) {
+                const aVeri = veriler.aylar[anahtar];
+                if (aVeri?.odemeler?.[sablonId]?.odeme !== undefined && String(aVeri.odemeler[sablonId].odeme).trim() !== "" && Number(aVeri.odemeler[sablonId].odeme) > 0) {
+                    yapilanOdemeSayisi++;
+                }
+            }
+            
+            let toplamTaksit = Number(sablon.sablon.toplamTaksitSayisi) || 0;
+            let kalanTaksit = toplamTaksit - yapilanOdemeSayisi;
+            if (kalanTaksit < 0) kalanTaksit = 0;
+
+            ay.odemeler[sablonId].kalanTaksit = kalanTaksit;
+
+            const taksitInput = document.getElementById(`taksit-input-${sablonId}`);
+            if (taksitInput) {
+                taksitInput.value = kalanTaksit;
+            }
+        }
+    }
+
     kaydet();
     genelToplamiHesapla();
     kalanBorclariGuncelle();
@@ -637,27 +661,24 @@ function genelToplamiHesapla() {
     }
 }
 
-function gecmisTaksitTutariniBul(sablonId) {
-    for (const anahtar in veriler.aylar) {
-        const ay = veriler.aylar[anahtar];
-        if (ay?.odemeler?.[sablonId]?.odeme) {
-            const tutar = parseSayi(ay.odemeler[sablonId].odeme);
-            if (tutar > 0) return tutar;
-        }
-    }
-    return 0;
-}
-
 function kalanBorcHesapla(sablon) {
-    const odeme = odemeVerisiniGetir(sablon.id);
     if (sablon.tur === "taksitli") {
-        const kalanTaksit = etkinKalanTaksitGetir(sablon.id);
-        if (kalanTaksit <= 0) return 0;
-        let taksitTutari = parseSayi(odeme.odeme);
-        if (taksitTutari === 0) taksitTutari = gecmisTaksitTutariniBul(sablon.id);
-        return kalanTaksit * taksitTutari;
+        const toplamBorc = sablon.toplamBaslangicBorcu || (sablon.taksitTutari * sablon.toplamTaksitSayisi);
+        
+        let yapilanToplamOdeme = 0;
+        for (const anahtar in veriler.aylar) {
+            const ayVerisi = veriler.aylar[anahtar];
+            if (ayVerisi && ayVerisi.odemeler && ayVerisi.odemeler[sablon.id]) {
+                yapilanToplamOdeme += parseSayi(ayVerisi.odemeler[sablon.id].odeme);
+            }
+        }
+
+        const kalanNetBorc = toplamBorc - yapilanToplamOdeme;
+        return kalanNetBorc > 0 ? kalanNetBorc : 0;
     }
+    
     if (sablon.tur === "kredikarti") {
+        const odeme = odemeVerisiniGetir(sablon.id);
         return parseSayi(odeme.kalanBorc);
     }
     return 0;
@@ -793,21 +814,23 @@ function ayarlariGuncelle() {
 }
 
 function gelirBaslikEkle() {
-    const ad = prompt("Yeni gelir başlığı (Örn: Maaşlar, Ek Gelir):");
-    if (!ad || !ad.trim()) return;
-    veriler.ayarlar.gelirBasliklari.push({ id: benzersizId(), adi: ad.trim(), sablonlar: [] });
-    kaydet();
-    ayarlariGuncelle();
+    gosterOzelPrompt("Yeni Gelir Başlığı:", "", (ad) => {
+        if (!ad || !ad.trim()) return;
+        veriler.ayarlar.gelirBasliklari.push({ id: benzersizId(), adi: ad.trim(), sablonlar: [] });
+        kaydet();
+        ayarlariGuncelle();
+    });
 }
 
 function gelirBaslikDuzenle(id) {
     const baslik = gelirBaslikBul(id);
     if (!baslik) return;
-    const yeniAd = prompt("Gelir başlık adını değiştirin:", baslik.adi);
-    if (yeniAd === null || !yeniAd.trim()) return;
-    baslik.adi = yeniAd.trim();
-    kaydet();
-    ayarlariGuncelle();
+    gosterOzelPrompt("Gelir başlık adını değiştirin:", baslik.adi, (yeniAd) => {
+        if (!yeniAd || !yeniAd.trim()) return;
+        baslik.adi = yeniAd.trim();
+        kaydet();
+        ayarlariGuncelle();
+    });
 }
 
 function gelirBaslikSil(id) {
@@ -821,21 +844,23 @@ function gelirBaslikSil(id) {
 }
 
 function baslikEkle() {
-    const ad = prompt("Yeni gider başlığı (Örn: Faturalar, Harcamalar):");
-    if (!ad || !ad.trim()) return;
-    veriler.ayarlar.basliklar.push({ id: benzersizId(), adi: ad.trim(), sablonlar: [] });
-    kaydet();
-    ayarlariGuncelle();
+    gosterOzelPrompt("Yeni Gider Başlığı:", "", (ad) => {
+        if (!ad || !ad.trim()) return;
+        veriler.ayarlar.basliklar.push({ id: benzersizId(), adi: ad.trim(), sablonlar: [] });
+        kaydet();
+        ayarlariGuncelle();
+    });
 }
 
 function baslikDuzenle(id) {
     const baslik = baslikBul(id);
     if (!baslik) return;
-    const yeniAd = prompt("Başlık adını değiştirin:", baslik.adi);
-    if (yeniAd === null || !yeniAd.trim()) return;
-    baslik.adi = yeniAd.trim();
-    kaydet();
-    ayarlariGuncelle();
+    gosterOzelPrompt("Başlık adını değiştirin:", baslik.adi, (yeniAd) => {
+        if (!yeniAd || !yeniAd.trim()) return;
+        baslik.adi = yeniAd.trim();
+        kaydet();
+        ayarlariGuncelle();
+    });
 }
 
 function baslikSil(id) {
@@ -926,15 +951,59 @@ function sablonKaydet() {
         return;
     }
 
+    let ekBilgiler = {};
+    if (tur === "taksitli") {
+        gosterOzelPrompt("Hangi aydan başlıyor? (Örn: 2026-08):", ayAnahtari(aktifTarih), (baslangicAyInput) => {
+            if (!baslangicAyInput) return;
+            
+            setTimeout(() => {
+                gosterOzelPrompt("Aylık taksit tutarı ne kadar?:", "10000", (taksitTutariInput) => {
+                    if (!taksitTutariInput) return;
+
+                    setTimeout(() => {
+                        gosterOzelPrompt("Toplam taksit sayısı kaç?:", "6", (taksitSayisiInput) => {
+                            if (!taksitSayisiInput) return;
+
+                            const aylikTutar = parseSayi(taksitTutariInput);
+                            const toplamTaksit = parseInt(taksitSayisiInput);
+
+                            if (aylikTutar <= 0 || isNaN(toplamTaksit) || toplamTaksit <= 0) {
+                                alert("Lütfen geçerli bir taksit tutarı ve sayısı girin.");
+                                return;
+                            }
+
+                            ekBilgiler = {
+                                baslangicAy: baslangicAyInput.trim(),
+                                taksitTutari: aylikTutar,
+                                toplamTaksitSayisi: toplamTaksit,
+                                toplamBaslangicBorcu: aylikTutar * toplamTaksit
+                            };
+
+                            sablonKaydetDevam(baslik, ad, tur, ekBilgiler);
+                        });
+                    }, 100);
+                });
+            }, 100);
+        });
+        return;
+    }
+
+    sablonKaydetDevam(baslik, ad, tur, ekBilgiler);
+}
+
+function sablonKaydetDevam(baslik, ad, tur, ekBilgiler) {
     if (!baslik.sablonlar) baslik.sablonlar = [];
 
     if (!duzenlenenSablonId) {
-        baslik.sablonlar.push({ id: benzersizId(), adi: ad, tur: tur });
+        baslik.sablonlar.push({ id: benzersizId(), adi: ad, tur: tur, ...ekBilgiler });
     } else {
         const sablon = baslik.sablonlar.find(s => s.id === duzenlenenSablonId);
         if (sablon) {
             sablon.adi = ad;
             sablon.tur = tur;
+            if (tur === "taksitli") {
+                Object.assign(sablon, ekBilgiler);
+            }
         }
     }
 
@@ -1087,13 +1156,14 @@ function jsonIceriAktar(event) {
     reader.onload = function (e) {
         try {
             const yeniVeriler = JSON.parse(e.target.result);
-            if (!yeniVeriler || typeof yeniVeriler !== "object" || !yeniVeriler.ayarlar || !yeniVeriler.aylar) {
+            if (!yeniVeriler || typeof yeniVeriler !== "object" || !yeniVeriler.aylar) {
                 throw new Error("Geçersiz dosya yapısı");
             }
 
             if (confirm("Mevcut verilerinizin üzerine yedek dosyasındaki veriler yüklenecek. Devam etmek istiyor musunuz?")) {
                 veriler = yeniVeriler;
                 if (!veriler.aylar) veriler.aylar = {};
+                if (!veriler.ayarlar) veriler.ayarlar = { gelirBasliklari: [], basliklar: [] };
                 if (!veriler.ayarlar.gelirBasliklari) veriler.ayarlar.gelirBasliklari = [];
                 if (!veriler.ayarlar.basliklar) veriler.ayarlar.basliklar = [];
 
@@ -1306,6 +1376,44 @@ function ozetYilAzalt() {
 function ozetYilArtir() {
     ozetYili++;
     yillikOzetiGuncelle();
+}
+
+let aktifPromptCallback = null;
+
+function gosterOzelPrompt(baslikText, varsayilanDeger = "", callback) {
+    const modal = document.getElementById("ozelPromptModal");
+    const baslikEl = document.getElementById("promptBaslik");
+    const inputEl = document.getElementById("promptInput");
+    
+    if (!modal || !inputEl) {
+        callback(prompt(baslikText, varsayilanDeger));
+        return;
+    }
+
+    baslikEl.textContent = baslikText;
+    inputEl.value = varsayilanDeger;
+    modal.classList.remove("gizli");
+    
+    setTimeout(() => {
+        inputEl.focus();
+        inputEl.select();
+    }, 50);
+
+    aktifPromptCallback = callback;
+}
+
+function ozelPromptKapat(onaylandi) {
+    const modal = document.getElementById("ozelPromptModal");
+    const inputEl = document.getElementById("promptInput");
+    
+    modal.classList.add("gizli");
+    
+    const cb = aktifPromptCallback;
+    aktifPromptCallback = null;
+    
+    if (onaylandi && cb) {
+        cb(inputEl.value);
+    }
 }
 
 

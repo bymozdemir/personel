@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 
     <!-- Erişilebilirlik: kullanıcı yakınlaştırmayı engelleyen kısıtlamalar kaldırıldı -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 
     <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
@@ -270,6 +270,18 @@
         </section>
 
     </div>
+    <!-- Özel Duyarlı Prompt Modalı -->
+<div id="ozelPromptModal" class="gizli" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 99999;">
+    <div style="background: var(--card); color: var(--text-strong); padding: 22px; border-radius: var(--radius); width: 90%; max-width: 340px; box-shadow: var(--shadow); border: 1px solid var(--border);">
+        <h3 id="promptBaslik" style="margin: 0 0 12px 0; font-size: 16px; font-weight: 800; color: var(--text-strong);">Başlık</h3>
+        <input type="text" id="promptInput" style="width: 100%; height: 46px; padding: 0 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--card-inset); color: var(--text); font-size: 15px; outline: none; margin-bottom: 18px;" autocomplete="off">
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button onclick="ozelPromptKapat(false)" style="flex: 1; height: 42px; border: 1px solid var(--border); border-radius: 10px; background: var(--card-alt); color: var(--text); font-weight: 700;">İptal</button>
+            <button onclick="ozelPromptKapat(true)" style="flex: 1; height: 42px; border: none; border-radius: 10px; background: var(--primary); color: #fff; font-weight: 700;">Tamam</button>
+        </div>
+    </div>
+</div>
+
 
     <script src="app.js"></script>
 
