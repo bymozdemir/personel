@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="tr" class="bg-app">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Erişilebilirlik: kullanıcı yakınlaştırmayı engelleyen kısıtlamalar kaldırıldı -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+
+    <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+
+    <title>Ödeme Takip</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="app">
+
+        <!-- =================================================
+             ANA SAYFA
+             ================================================= -->
+
+        <section id="anasayfa" class="sayfa">
+
+            <header class="ust-bar">
+                <div>
+                    <div class="uygulama-baslik">Ödeme Takip</div>
+                    <div id="ayBasligi" class="ay-basligi">Ağustos 2026</div>
+                </div>
+
+                <button id="ayarlarBtn" class="ikon-btn" onclick="ayarlarAc()" aria-label="Ayarlar">
+                    &#9881;
+                </button>
+            </header>
+
+            <!-- AY SEÇİMİ -->
+            <div class="ay-secici">
+                <button id="oncekiAyBtn" class="ay-btn" onclick="oncekiAyaGit()" aria-label="Önceki ay">‹</button>
+                <button id="bugunAyBtn" class="bugun-btn" onclick="buAyaGit()">Bu Ay</button>
+                <button id="sonrakiAyBtn" class="ay-btn" onclick="sonrakiAyaGit()" aria-label="Sonraki ay">›</button>
+            </div>
+
+            <!-- GELİR VE ÖDEME KATEGORİLERİ (JS dolduracak) -->
+            <div id="gelirListesi"></div>
+            <main id="odemeListesi"></main>
+
+            <!-- BU AY ÖZETİ -->
+            <section class="genel-toplam-karti">
+                <div class="toplam-baslik">Bu Ayın Özeti</div>
+                <div id="genelToplam" class="genel-toplam">0,00 ₺</div>
+            </section>
+
+            <!-- KALAN BORÇLAR -->
+            <section class="borclar-karti">
+                <div class="borclar-baslik">Kalan Borçlar</div>
+                <div id="kalanBorclarListesi"></div>
+                <div class="toplam-borc-satiri">
+                    <span>Toplam Kalan Borç</span>
+                    <strong id="toplamKalanBorc">0,00 ₺</strong>
+                </div>
+            </section>
+
+            <button class="buyuk-menu-btn" onclick="yillikOzetAc()">Yıllık Özet</button>
+
+        </section>
+
+
+        <!-- =================================================
+             AYARLAR SAYFASI
+             ================================================= -->
+
+        <section id="ayarlarSayfasi" class="sayfa gizli">
+
+            <header class="sayfa-basligi">
+                <button class="geri-btn" onclick="geriGit()" aria-label="Geri">‹</button>
+                <h1>Ayarlar</h1>
+            </header>
+
+            <!-- GÖRÜNÜM -->
+            <section class="ayar-karti tema-karti">
+                <div>
+                    <h2>Görünüm</h2>
+                    <p>Temalar arasında geçiş yapın.</p>
+                </div>
+                <button id="temaBtn" class="tema-btn" onclick="temaDegistir()">Karanlık Mod</button>
+            </section>
+
+            <!-- BAŞLIKLAR -->
+            <section class="ayar-karti">
+                <div class="ayar-karti-baslik">
+                    <div>
+                        <h2>Gelir & Ödeme Başlıkları</h2>
+                        <p>Maaş, Fatura, Kredi Kartı gibi başlıklar oluşturabilirsiniz</p>
+                    </div>
+                </div>
+                <div id="basliklarListesi"></div>
+            </section>
+
+            <!-- JSON YEDEKLEME -->
+            <section class="ayar-karti">
+                <div class="ayar-karti-baslik">
+                    <div>
+                        <h2>Yedekleme</h2>
+                        <p>Verilerinizi dışa aktarın veya geri yükleyin.</p>
+                    </div>
+                </div>
+                <div class="iki-buton">
+                    <button class="veri-btn" onclick="jsonDisariAktar()">Yedekle</button>
+                    <button class="veri-btn" onclick="jsonIceriAktarAc()">Geri Yükle</button>
+                </div>
+                <input type="file" id="jsonFileInput" accept=".json,application/json" onchange="jsonIceriAktar(event)" hidden>
+            </section>
+
+            <!-- SIFIRLAMA -->
+            <section class="tehlikeli-alan">
+                <h2>Tehlikeli Alan</h2>
+                <p>Bu işlem tüm verileri kalıcı olarak siler.</p>
+                <button class="sil-btn" onclick="tumVerileriSil()">Tüm Verileri Sil</button>
+            </section>
+
+        </section>
+
+
+        <!-- =================================================
+             GİDER ŞABLON YÖNETİMİ SAYFASI
+             ================================================= -->
+
+        <section id="sablonSayfasi" class="sayfa gizli">
+            <header class="sayfa-basligi">
+                <button class="geri-btn" onclick="geriGit()" aria-label="Geri">‹</button>
+                <div>
+                    <h1 id="sablonSayfasiBaslik">Ödeme Kalemleri</h1>
+                    <p>Ana ekranda görünecek ödeme kalemlerini yönetin.</p>
+                </div>
+            </header>
+
+            <section class="ayar-karti">
+                <div class="ayar-karti-baslik">
+                    <div>
+                        <h2>Ödeme Kalemleri</h2>
+                        <p>Elektrik, kira, kredi kartı gibi kalemler ekleyin.</p>
+                    </div>
+                    <button class="ekle-btn" onclick="sablonEkle()" aria-label="Kalem ekle">＋</button>
+                </div>
+                <div id="sablonlarListesi"></div>
+            </section>
+        </section>
+
+
+        <!-- =================================================
+             GİDER ŞABLON DÜZENLEME SAYFASI
+             ================================================= -->
+
+        <section id="sablonDuzenleSayfasi" class="sayfa gizli">
+            <header class="sayfa-basligi">
+                <button class="geri-btn" onclick="geriGit()" aria-label="Geri">‹</button>
+                <h1>Ödeme Kalemi Düzenle</h1>
+            </header>
+
+            <section class="form-karti">
+                <label for="sablonAdiInput">Kalem Adı</label>
+                <input type="text" id="sablonAdiInput" placeholder="Örn: Elektrik">
+
+                <label for="sablonTuruInput">Ödeme Türü</label>
+                <select id="sablonTuruInput">
+                    <option value="normal">Normal Ödeme</option>
+                    <option value="taksitli">Taksitli Borç</option>
+                    <option value="kredikarti">Kredi Kartı</option>
+                </select>
+
+                <div class="bilgi-kutusu">
+                    <strong>Taksitli Borç</strong>
+                    <p>Kalan borç, toplam borçtan o ana kadar girdiğiniz gerçek ödemelerin toplamı çıkarılarak hesaplanır. Kalan taksit sayısı ise kaç ay ödeme girildiğini gösterir; ödediğiniz tutar taksit tutarından farklıysa (eksik/fazla ödeme) bu iki değer birebir örtüşmeyebilir.</p>
+                </div>
+
+                <div class="bilgi-kutusu">
+                    <strong>Kredi Kartı</strong>
+                    <p>Kalan borç elle düzenlenir. Kartlarda borç her ay değişebilir.</p>
+                </div>
+
+                <button class="kaydet-btn" onclick="sablonKaydet()">Kaydet</button>
+            </section>
+        </section>
+
+
+        <!-- =================================================
+             GELİR ŞABLON YÖNETİMİ SAYFASI (gider ile tutarlı)
+             ================================================= -->
+
+        <section id="gelirSablonSayfasi" class="sayfa gizli">
+            <header class="sayfa-basligi">
+                <button class="geri-btn" onclick="geriGit()" aria-label="Geri">‹</button>
+                <div>
+                    <h1 id="gelirSablonSayfasiBaslik">Gelir Kalemleri</h1>
+                    <p>Ana ekranda görünecek gelir kalemlerini yönetin.</p>
+                </div>
+            </header>
+
+            <section class="ayar-karti">
+                <div class="ayar-karti-baslik">
+                    <div>
+                        <h2>Gelir Kalemleri</h2>
+                        <p>Maaş, ek iş, kira geliri gibi kalemler ekleyin.</p>
+                    </div>
+                    <button class="ekle-btn ekle-btn-gelir" onclick="gelirSablonEkle()" aria-label="Gelir kalemi ekle">＋</button>
+                </div>
+                <div id="gelirSablonlarListesi"></div>
+            </section>
+        </section>
+
+
+        <!-- =================================================
+             GELİR ŞABLON DÜZENLEME SAYFASI
+             ================================================= -->
+
+        <section id="gelirSablonDuzenleSayfasi" class="sayfa gizli">
+            <header class="sayfa-basligi">
+                <button class="geri-btn" onclick="geriGit()" aria-label="Geri">‹</button>
+                <h1>Gelir Kalemi Düzenle</h1>
+            </header>
+
+            <section class="form-karti">
+                <label for="gelirSablonAdiInput">Gelir Kalemi Adı</label>
+                <input type="text" id="gelirSablonAdiInput" placeholder="Örn: Maaş, Ek İş">
+                <button class="kaydet-btn kaydet-btn-gelir" onclick="gelirSablonKaydet()">Kaydet</button>
+            </section>
+        </section>
+
+
+        <!-- =================================================
+             YILLIK ÖZET SAYFASI
+             ================================================= -->
+
+        <section id="yillikOzetSayfasi" class="sayfa gizli">
+            <header class="sayfa-basligi">
+                <button class="geri-btn" onclick="geriGit()" aria-label="Geri">‹</button>
+                <h1>Yıllık Özet</h1>
+            </header>
+
+            <div class="yil-secici">
+                <button onclick="ozetYilAzalt()" aria-label="Önceki yıl">‹</button>
+                <strong id="ozetYili">2026</strong>
+                <button onclick="ozetYilArtir()" aria-label="Sonraki yıl">›</button>
+            </div>
+
+            <section class="yillik-toplam-karti">
+                <div>Yıllık Toplam</div>
+                <strong id="yillikToplam">0,00 ₺</strong>
+            </section>
+
+            <section class="ayar-karti">
+                <h2>Aylık Ödemeler</h2>
+                <div id="aylikOzetListesi"></div>
+            </section>
+
+            <section class="ayar-karti">
+                <h2>Kategori Bazında</h2>
+                <div id="kategoriOzetListesi"></div>
+
+                <div class="grafik-karti">
+                    <h3>Kategori Dağılım Grafiği</h3>
+                    <canvas id="pastaCanvas" width="200" height="200"></canvas>
+                    <div id="grafikDetay" class="grafik-detay">
+                        Grafikteki bir dilime dokunarak detayı görebilirsiniz.
+                    </div>
+                </div>
+            </section>
+        </section>
+
+    </div>
+    <!-- Özel Duyarlı Prompt Modalı -->
+<div id="ozelPromptModal" class="gizli" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 99999;">
+    <div style="background: var(--card); color: var(--text-strong); padding: 22px; border-radius: var(--radius); width: 90%; max-width: 340px; box-shadow: var(--shadow); border: 1px solid var(--border);">
+        <h3 id="promptBaslik" style="margin: 0 0 12px 0; font-size: 16px; font-weight: 800; color: var(--text-strong);">Başlık</h3>
+        <input type="text" id="promptInput" style="width: 100%; height: 46px; padding: 0 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--card-inset); color: var(--text); font-size: 15px; outline: none; margin-bottom: 18px;" autocomplete="off">
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button onclick="ozelPromptKapat(false)" style="flex: 1; height: 42px; border: 1px solid var(--border); border-radius: 10px; background: var(--card-alt); color: var(--text); font-weight: 700;">İptal</button>
+            <button onclick="ozelPromptKapat(true)" style="flex: 1; height: 42px; border: none; border-radius: 10px; background: var(--primary); color: #fff; font-weight: 700;">Tamam</button>
+        </div>
+    </div>
+</div>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
